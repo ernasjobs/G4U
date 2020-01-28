@@ -1,3 +1,5 @@
+
+<?php
 /* 
 makes a PDO connection to 'g4u' database
 throws an exception if something went wrong.
@@ -5,8 +7,6 @@ throws an exception if something went wrong.
 anytime we want to make a connection to database we can include this script
 by making use of require('config.php') method 
 */
-
-<?php
 $host = 'localhost';
 $db   = 'g4u';
 $user = 'root';
