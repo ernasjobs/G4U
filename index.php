@@ -1,4 +1,39 @@
 <?php
+require 'config.php';
+/* 
+if btnSubmit is clicked we will make a query to database with
+username and password that is being provided.
+if number of row returned is equals to one then we check role attribute,
+if role is equals to 'admin' we are pointing to admin panel otherwise
+to  homepage
+*/
+if(isset($_POST['btnSubmit'])){
+    $textUsername=$_POST['txtUsername'];
+    $textPassword=$_POST['txtPass'];
+    $stmt=$pdo ->prepare('SELECT * FROM Employee WHERE staffId=? AND password=?');
+    $stmt ->execute([$textUsername,$textPassword]);
+    $num_rows = $stmt->rowCount();
+    if($num_rows==1)
+    {
+        $query=$stmt->fetch();
+        if($query['jobTitle']=="Sales Assistant"){
+            header("Location:saleasssitant.php");
+   } 
+    else if ($query['jobTitle']=="Senior Sales") {
+           header("Location:seniorsales.php");
+        } 
+        else if ($query['jobTitle']=="Assistant QA Control") {
+            header("Location:qacontrol.php");
+         } 
+         else if ($query['jobTitle']=="Manager") {
+            header("Location:manager.php");
+         }
+    }
+    else
+    {
+      $message="The username or password is incorrect!";
+    }
+}
 
 
 ?>
@@ -7,7 +42,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login V1</title>
+	<title>G4U - Home</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -39,10 +74,13 @@
 				<form action="index.php" method="post" class="login100-form validate-form">
 					<span class="login100-form-title">
 						Staff Login
+                    </span>
+                    <span class="login100-form-message">
+						<?php if(isset($message)) echo $message; ?>
 					</span>
 
 					<div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-						<input class="input100" type="text" name="username" placeholder="Username">
+						<input class="input100" type="text" name="txtUsername" placeholder="Username">
 						<span class="focus-input100"></span>
 						<span class="symbol-input100">
 							<i class="fa fa-user" aria-hidden="true"></i>
@@ -50,7 +88,7 @@
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate = "Password is required">
-						<input class="input100" type="password" name="password" placeholder="Password">
+						<input class="input100" type="password" name="txtPass" placeholder="Password">
 						<span class="focus-input100"></span>
 						<span class="symbol-input100">
 							<i class="fa fa-lock" aria-hidden="true"></i>
@@ -58,23 +96,13 @@
 					</div>
 					
 					<div class="container-login100-form-btn">
-						<button type="submit" class="login100-form-btn">
+						<button type="submit" name="btnSubmit" class="login100-form-btn">
 							Login
 						</button>
 					</div>
-
-					<div class="text-center p-t-12">
-						<span class="txt1">
-							Forgot
-						</span>
-						<a class="txt2" href="#">
-							Username / Password?
-						</a>
-					</div>
-
-					<div class="text-center p-t-136">
-						<a class="txt2" href="#">
-							Admin Page
+					<div class="text-center p-t-20">
+						<a class="txt2" href="admin.php">
+							Go to Head Office Page
 							<i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
 						</a>
 					</div>
